@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活服务平台 - 首页</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 深色渐变背景 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 页面容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 导航栏 */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+
+        .login-btn {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 主内容区域 */
+        main {
+            padding: 40px 0;
+        }
+
+        /* 霓虹标题 */
+        .neon-title {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            animation: neonPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonPulse {
+            from {
+                text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.5);
+            }
+        }
+
+        /* 服务模块容器 */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        /* 服务卡片 */
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 0, 255, 0.3);
+            border-color: #ff00ff;
+        }
+
+        /* 服务图标 */
+        .service-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .icon-clothing::before {
+            content: "👕";
+        }
+
+        .icon-food::before {
+            content: "🍔";
+        }
+
+        .icon-housing::before {
+            content: "🏠";
+        }
+
+        .icon-transportation::before {
+            content: "🚗";
+        }
+
+        /* 服务标题 */
+        .service-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        /* 服务描述 */
+        .service-description {
+            font-size: 16px;
+            color: #cccccc;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* 查看按钮 */
+        .view-btn {
+            background: rgba(255, 0, 255, 0.2);
+            color: #ffffff;
+            padding: 12px 25px;
+            border: 1px solid #ff00ff;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .view-btn:hover {
+            background: rgba(255, 0, 255, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666666;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .neon-title {
+                font-size: 32px;
+            }
+
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav ul {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <header>
+            <div class="logo">生活服务平台</div>
+            <nav>
+                <ul>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">服务</a></li>
+                    <li><a href="#">商家</a></li>
+                    <li><a href="#">关于我们</a></li>
+                </ul>
+            </nav>
+            <button class="login-btn">登录/注册</button>
+        </header>
+
+        <!-- 主内容区域 -->
+        <main>
+            <!-- 霓虹标题 -->
+            <h1 class="neon-title">衣·食·住·行</h1>
+
+            <!-- 服务模块网格 -->
+            <div class="service-grid">
+                <!-- 衣模块 -->
+                <div class="service-card">
+                    <span class="service-icon icon-clothing"></span>
+                    <h2 class="service-title">衣</h2>
+                    <p class="service-description">时尚穿搭、服装定制、洗衣干洗等各类服饰相关服务，满足您的穿着需求。</p>
+                    <a href="#" class="view-btn">查看服务</a>
+                </div>
+
+                <!-- 食模块 -->
+                <div class="service-card">
+                    <span class="service-icon icon-food"></span>
+                    <h2 class="service-title">食</h2>
+                    <p class="service-description">美食外卖、餐厅预订、私厨上门等各类餐饮服务，让您尽享美味佳肴。</p>
+                    <a href="#" class="view-btn">查看服务</a>
+                </div>
+
+                <!-- 住模块 -->
+                <div class="service-card">
+                    <span class="service-icon icon-housing"></span>
+                    <h2 class="service-title">住</h2>
+                    <p class="service-description">房屋租赁、家政服务、装修设计等各类住房相关服务，打造舒适居住环境。</p>
+                    <a href="#" class="view-btn">查看服务</a>
+                </div>
+
+                <!-- 行模块 -->
+                <div class="service-card">
+                    <span class="service-icon icon-transportation"></span>
+                    <h2 class="service-title">行</h2>
+                    <p class="service-description">打车出行、代驾服务、汽车租赁等各类交通服务，让您出行更加便捷。</p>
+                    <a href="#" class="view-btn">查看服务</a>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer>
+            <p>&copy; 2024 生活服务平台. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为服务卡片添加点击效果
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 这里可以添加跳转逻辑
+                    const serviceTitle = this.querySelector('.service-title').textContent;
+                    console.log('点击了' + serviceTitle + '模块');
+                });
+            });
+
+            // 为登录按钮添加点击效果
+            const loginBtn = document.querySelector('.login-btn');
+            loginBtn.addEventListener('click', function() {
+                console.log('点击了登录/注册按钮');
+                // 这里可以添加登录/注册弹窗或跳转逻辑
+            });
+        });
+    </script>
+</body>
+</html>

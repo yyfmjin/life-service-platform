@@ -1,0 +1,59 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 布局样式 */
+.layout-container {
+  min-height: 100vh;
+}
+
+.layout-content {
+  margin: 16px;
+  padding: 24px;
+  background: white;
+  min-height: calc(100vh - 100px);
+}
+
+/* 页面标题样式 */
+.page-title {
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+/* 按钮组样式 */
+.btn-group {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* 表单样式 */
+.form-container {
+  max-width: 800px;
+}
+
+/* 表格操作列样式 */
+.action-column {
+  display: flex;
+  gap: 8px;
+}

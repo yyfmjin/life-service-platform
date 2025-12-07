@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活服务平台 - 支付订单</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 深色渐变背景 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        /* 导航标题 */
+        .nav-title {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 支付页容器 */
+        .payment-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* 支付详情 */
+        .payment-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 部分标题 */
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff00ff;
+            border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        /* 订单信息 */
+        .order-info-section {
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .order-label {
+            color: #999999;
+        }
+
+        .order-value {
+            color: #ffffff;
+        }
+
+        /* 支付倒计时 */
+        .countdown-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 0, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .countdown-title {
+            color: #ff00ff;
+            font-weight: bold;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .timer-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+        }
+
+        /* 支付方式 */
+        .payment-methods-section {
+            margin-bottom: 30px;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+        }
+
+        .payment-option.selected {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .payment-icon {
+            font-size: 32px;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .payment-desc {
+            color: #999999;
+            font-size: 14px;
+        }
+
+        /* 地图容器 */
+        .map-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, rgba(255, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+        }
+
+        /* 价格明细 */
+        .price-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .price-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 20px;
+            color: #ff00ff;
+        }
+
+        .price-label {
+            color: #999999;
+        }
+
+        .price-value {
+            color: #ffffff;
+        }
+
+        .price-item:last-child .price-value {
+            font-size: 24px;
+        }
+
+        /* 支付按钮 */
+        .pay-btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 支付安全提示 */
+        .security-tips {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #999999;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .payment-container {
+                grid-template-columns: 1fr;
+            }
+
+            .map-placeholder {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .payment-details,
+            .price-summary {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .timer-item {
+                font-size: 20px;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .map-placeholder {
+                height: 200px;
+                font-size: 36px;
+            }
+
+            .countdown-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="nav-title">生活服务平台</div>
+        <div class="nav-buttons">
+            <button class="nav-btn">首页</button>
+            <button class="nav-btn">订单</button>
+            <button class="nav-btn">购物车</button>
+            <button class="nav-btn">我的</button>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 页面标题 -->
+        <h1 class="page-title">支付订单</h1>
+
+        <!-- 支付页容器 -->
+        <div class="payment-container">
+            <!-- 支付详情 -->
+            <div class="payment-details">
+                <!-- 订单信息 -->
+                <div class="order-info-section">
+                    <h2 class="section-title">订单信息</h2>
+                    <div class="order-card">
+                        <div class="order-item">
+                            <span class="order-label">订单号</span>
+                            <span class="order-value">LIFE202401031800001</span>
+                        </div>
+                        <div class="order-item">
+                            <span class="order-label">服务内容</span>
+                            <span class="order-value">米其林星级餐厅晚餐 × 2人</span>
+                        </div>
+                        <div class="order-item">
+                            <span class="order-label">服务时间</span>
+                            <span class="order-value">2024年1月3日 18:00</span>
+                        </div>
+                        <div class="order-item">
+                            <span class="order-label">支付金额</span>
+                            <span class="order-value" style="color: #ff00ff; font-weight: bold;">¥1,846</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 支付倒计时 -->
+                <div class="countdown-section">
+                    <div class="countdown-title">请在</div>
+                    <div class="countdown-timer">
+                        <div class="timer-item" id="minutes">14</div>
+                        <div class="timer-item">:</div>
+                        <div class="timer-item" id="seconds">59</div>
+                    </div>
+                    <div class="countdown-title">内完成支付</div>
+                </div>
+
+                <!-- 支付方式 -->
+                <div class="payment-methods-section">
+                    <h2 class="section-title">选择支付方式</h2>
+                    <div class="payment-options">
+                        <div class="payment-option selected">
+                            <div class="payment-icon">💳</div>
+                            <div class="payment-info">
+                                <div class="payment-name">支付宝</div>
+                                <div class="payment-desc">推荐使用支付宝APP扫码支付</div>
+                            </div>
+                        </div>
+                        <div class="payment-option">
+                            <div class="payment-icon">💚</div>
+                            <div class="payment-info">
+                                <div class="payment-name">微信支付</div>
+                                <div class="payment-desc">微信扫码或微信支付分</div>
+                            </div>
+                        </div>
+                        <div class="payment-option">
+                            <div class="payment-icon">🏦</div>
+                            <div class="payment-info">
+                                <div class="payment-name">银行卡支付</div>
+                                <div class="payment-desc">支持信用卡/借记卡</div>
+                            </div>
+                        </div>
+                        <div class="payment-option">
+                            <div class="payment-icon">💰</div>
+                            <div class="payment-info">
+                                <div class="payment-name">余额支付</div>
+                                <div class="payment-desc">账户余额：¥500.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 地图容器 -->
+                <div class="map-container">
+                    <h3 style="margin-bottom: 15px; color: #ffffff;">配送位置</h3>
+                    <div class="map-placeholder">🗺️</div>
+                </div>
+            </div>
+
+            <!-- 价格明细 -->
+            <div class="price-summary">
+                <h2 class="section-title">价格明细</h2>
+                <div class="price-item">
+                    <span class="price-label">商品总价</span>
+                    <span class="price-value">¥1,996</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">基础服务费用</span>
+                    <span class="price-value">¥1,996</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">优惠折扣</span>
+                    <span class="price-value">-¥100</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">平台补贴</span>
+                    <span class="price-value">-¥50</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">配送费</span>
+                    <span class="price-value">¥0</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">总计</span>
+                    <span class="price-value">¥1,846</span>
+                </div>
+                <button class="pay-btn" onclick="processPayment()">立即支付</button>
+                <div class="security-tips">
+                    <span>🔒</span>
+                    <span>支付过程加密，请放心使用</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 支付倒计时功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+            let minutes = 14;
+            let seconds = 59;
+
+            const timer = setInterval(function() {
+                if (minutes === 0 && seconds === 0) {
+                    clearInterval(timer);
+                    alert('支付超时，请重新下单');
+                    // 可以跳转到订单列表页
+                    return;
+                }
+
+                if (seconds === 0) {
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+
+                minutesElement.textContent = minutes.toString().padStart(2, '0');
+                secondsElement.textContent = seconds.toString().padStart(2, '0');
+            }, 1000);
+
+            // 支付方式选择
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    paymentOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        });
+
+        // 处理支付
+        function processPayment() {
+            console.log('处理支付');
+            // 这里可以集成支付接口
+            alert('支付功能开发中');
+        }
+    </script>
+</body>
+</html>

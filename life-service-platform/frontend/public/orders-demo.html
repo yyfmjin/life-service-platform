@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活服务平台 - 我的订单</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 深色渐变背景 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 导航标题 */
+        .nav-title {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* 订单筛选 */
+        .order-filters {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 筛选标题 */
+        .filter-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ff00ff;
+        }
+
+        /* 筛选内容 */
+        .filter-content {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* 筛选输入框 */
+        .filter-input {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 14px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 筛选选择器 */
+        .filter-select {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 筛选按钮 */
+        .filter-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 订单列表 */
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 订单项 */
+        .order-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .order-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 订单头部 */
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* 订单ID */
+        .order-id {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        /* 订单状态 */
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .status-pending {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+
+        .status-processing {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+        }
+
+        .status-completed {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+        }
+
+        .status-cancelled {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+        }
+
+        /* 订单内容 */
+        .order-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 服务信息 */
+        .service-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* 服务图标 */
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 服务详情 */
+        .service-details {
+            flex: 1;
+        }
+
+        .service-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .service-desc {
+            font-size: 14px;
+            color: #cccccc;
+            margin-bottom: 10px;
+        }
+
+        /* 价格信息 */
+        .price-info {
+            text-align: right;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #999999;
+            margin-bottom: 5px;
+        }
+
+        .price-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff00ff;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 订单操作 */
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 操作按钮 */
+        .action-btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 15px;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            border: none;
+        }
+
+        .action-btn.primary:hover {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .page-btn:hover {
+            background: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .page-btn.active {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            border: none;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .order-content {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .filter-input {
+                min-width: auto;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .order-item {
+                padding: 15px;
+            }
+
+            .order-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="nav-title">生活服务平台</div>
+        <div class="nav-buttons">
+            <button class="nav-btn">首页</button>
+            <button class="nav-btn">服务</button>
+            <button class="nav-btn">订单</button>
+            <button class="nav-btn">我的</button>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 页面标题 -->
+        <h1 class="page-title">我的订单</h1>
+
+        <!-- 订单筛选 -->
+        <div class="order-filters">
+            <div class="filter-title">筛选订单</div>
+            <div class="filter-content">
+                <input type="text" class="filter-input" placeholder="搜索订单号">
+                <select class="filter-select">
+                    <option value="all">全部状态</option>
+                    <option value="pending">待支付</option>
+                    <option value="processing">处理中</option>
+                    <option value="completed">已完成</option>
+                    <option value="cancelled">已取消</option>
+                </select>
+                <select class="filter-select">
+                    <option value="all">全部分类</option>
+                    <option value="food">美食</option>
+                    <option value="clothing">服装</option>
+                    <option value="housing">住宿</option>
+                    <option value="transport">交通</option>
+                </select>
+                <button class="filter-btn">筛选</button>
+            </div>
+        </div>
+
+        <!-- 订单列表 -->
+        <div class="order-list">
+            <!-- 订单项 -->
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">订单号：202312250001</span>
+                    <span class="order-status status-processing">处理中</span>
+                </div>
+                <div class="order-content">
+                    <div class="service-info">
+                        <div class="service-icon">🍽️</div>
+                        <div class="service-details">
+                            <div class="service-name">米其林星级餐厅晚餐</div>
+                            <div class="service-desc">2023-12-30 19:00-21:00</div>
+                        </div>
+                    </div>
+                    <div class="price-info">
+                        <div class="price-label">总计</div>
+                        <div class="price-value">¥998</div>
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="action-btn">查看详情</button>
+                    <button class="action-btn primary">联系商家</button>
+                </div>
+            </div>
+
+            <!-- 订单项 -->
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">订单号：202312200002</span>
+                    <span class="order-status status-completed">已完成</span>
+                </div>
+                <div class="order-content">
+                    <div class="service-info">
+                        <div class="service-icon">🏠</div>
+                        <div class="service-details">
+                            <div class="service-name">豪华酒店住宿一晚</div>
+                            <div class="service-desc">2023-12-22 14:00-2023-12-23 12:00</div>
+                        </div>
+                    </div>
+                    <div class="price-info">
+                        <div class="price-label">总计</div>
+                        <div class="price-value">¥1888</div>
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="action-btn">查看详情</button>
+                    <button class="action-btn">评价</button>
+                </div>
+            </div>
+
+            <!-- 订单项 -->
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">订单号：202312150003</span>
+                    <span class="order-status status-pending">待支付</span>
+                </div>
+                <div class="order-content">
+                    <div class="service-info">
+                        <div class="service-icon">🚗</div>
+                        <div class="service-details">
+                            <div class="service-name">高级轿车接送服务</div>
+                            <div class="service-desc">2023-12-31 08:00-09:00</div>
+                        </div>
+                    </div>
+                    <div class="price-info">
+                        <div class="price-label">总计</div>
+                        <div class="price-value">¥388</div>
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="action-btn">查看详情</button>
+                    <button class="action-btn primary">立即支付</button>
+                </div>
+            </div>
+
+            <!-- 订单项 -->
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">订单号：202312100004</span>
+                    <span class="order-status status-completed">已完成</span>
+                </div>
+                <div class="order-content">
+                    <div class="service-info">
+                        <div class="service-icon">👗</div>
+                        <div class="service-details">
+                            <div class="service-name">高级定制服装</div>
+                            <div class="service-desc">2023-12-18 10:00-12:00</div>
+                        </div>
+                    </div>
+                    <div class="price-info">
+                        <div class="price-label">总计</div>
+                        <div class="price-value">¥2888</div>
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="action-btn">查看详情</button>
+                    <button class="action-btn">再次购买</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页 -->
+        <div class="pagination">
+            <button class="page-btn">上一页</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">下一页</button>
+        </div>
+    </div>
+
+    <script>
+        // 订单操作功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 筛选功能
+            const filterBtn = document.querySelector('.filter-btn');
+            filterBtn.addEventListener('click', function() {
+                // 这里可以添加筛选逻辑
+                console.log('筛选按钮点击');
+            });
+
+            // 搜索功能
+            const searchInput = document.querySelector('.filter-input');
+            searchInput.addEventListener('input', function() {
+                // 这里可以添加搜索逻辑
+                console.log('搜索输入:', this.value);
+            });
+
+            // 操作按钮点击事件
+            const actionBtns = document.querySelectorAll('.action-btn');
+            actionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 这里可以添加对应按钮的逻辑
+                    console.log('操作按钮点击:', this.textContent);
+                });
+            });
+
+            // 分页按钮点击事件
+            const pageBtns = document.querySelectorAll('.page-btn');
+            pageBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有active类
+                    pageBtns.forEach(b => b.classList.remove('active'));
+                    // 为当前按钮添加active类
+                    this.classList.add('active');
+                    // 这里可以添加分页逻辑
+                    console.log('分页按钮点击:', this.textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

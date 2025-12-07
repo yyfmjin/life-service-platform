@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活服务平台 - 服务详情</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 深色渐变背景 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 导航标题 */
+        .nav-title {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 面包屑导航 */
+        .breadcrumb {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #999999;
+        }
+
+        .breadcrumb a {
+            color: #00ffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #ff00ff;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 服务详情容器 */
+        .service-detail {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* 服务内容 */
+        .service-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 服务标题 */
+        .service-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        /* 服务评分 */
+        .service-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .rating-stars {
+            font-size: 20px;
+        }
+
+        /* 服务图片 */
+        .service-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .service-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-image:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 服务信息 */
+        .service-info {
+            margin-bottom: 25px;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ff00ff;
+        }
+
+        .info-content {
+            line-height: 1.6;
+            color: #cccccc;
+        }
+
+        /* 服务参数 */
+        .service-params {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .param-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .param-name {
+            color: #999999;
+        }
+
+        .param-value {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* 订单信息 */
+        .order-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* 价格信息 */
+        .price-info {
+            margin-bottom: 25px;
+        }
+
+        .price-label {
+            font-size: 16px;
+            color: #999999;
+            margin-bottom: 10px;
+        }
+
+        .price-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff00ff;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 价格描述 */
+        .price-desc {
+            color: #666666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* 购买选项 */
+        .purchase-options {
+            margin-bottom: 25px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-label {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .option-select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-select:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 数量选择 */
+        .quantity-select {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 0, 255, 0.3);
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(255, 0, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .quantity-value {
+            font-size: 20px;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* 购买按钮 */
+        .purchase-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .purchase-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 加入购物车按钮 */
+        .cart-btn {
+            width: 100%;
+            padding: 18px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 25px;
+            background: transparent;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            background: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 商家信息 */
+        .merchant-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+        }
+
+        /* 商家标题 */
+        .merchant-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff00ff;
+        }
+
+        /* 商家内容 */
+        .merchant-content {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .merchant-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .merchant-details {
+            flex: 1;
+        }
+
+        .merchant-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .merchant-desc {
+            color: #cccccc;
+            margin-bottom: 10px;
+        }
+
+        .merchant-stats {
+            display: flex;
+            gap: 20px;
+            color: #999999;
+        }
+
+        /* 评论区 */
+        .comments-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 评论标题 */
+        .comments-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff00ff;
+        }
+
+        /* 评论列表 */
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 评论项 */
+        .comment-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-user {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .comment-time {
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .comment-rating {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .comment-content {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .service-detail {
+                grid-template-columns: 1fr;
+            }
+
+            .service-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .service-params {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .service-content,
+            .order-info,
+            .merchant-info,
+            .comments-section {
+                padding: 20px;
+            }
+
+            .service-title {
+                font-size: 24px;
+            }
+
+            .price-value {
+                font-size: 36px;
+            }
+
+            .service-images {
+                grid-template-columns: 1fr;
+            }
+
+            .merchant-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar container">
+        <div class="nav-title">生活服务平台</div>
+        <div class="nav-buttons">
+            <button class="nav-btn">首页</button>
+            <button class="nav-btn">订单</button>
+            <button class="nav-btn">购物车</button>
+            <button class="nav-btn">我的</button>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="#">首页</a>
+            <span>></span>
+            <a href="#">美食</a>
+            <span>></span>
+            <span>米其林星级餐厅晚餐</span>
+        </div>
+
+        <!-- 服务详情 -->
+        <div class="service-detail">
+            <!-- 服务内容 -->
+            <div class="service-content">
+                <!-- 服务标题 -->
+                <h1 class="service-title">米其林星级餐厅晚餐</h1>
+                
+                <!-- 服务评分 -->
+                <div class="service-rating">
+                    <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                    <span>4.9 (128条评价)</span>
+                </div>
+
+                <!-- 服务图片 -->
+                <div class="service-images">
+                    <div class="service-image">🍽️</div>
+                    <div class="service-image">🥂</div>
+                    <div class="service-image">🍷</div>
+                </div>
+
+                <!-- 服务描述 -->
+                <div class="service-info">
+                    <div class="info-section">
+                        <h3 class="info-title">服务介绍</h3>
+                        <p class="info-content">
+                            享受米其林星级餐厅提供的精致晚餐，包含三道精致菜肴和一杯红酒。
+                            专业厨师团队为您呈现创意美食，优雅的用餐环境为您带来难忘的用餐体验。
+                        </p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-title">服务包含</h3>
+                        <p class="info-content">
+                            - 开胃菜一份<br>
+                            - 主菜（牛排/海鲜二选一）<br>
+                            - 甜点一份<br>
+                            - 红酒一杯<br>
+                            - 免费停车<br>
+                            - 专业侍酒服务
+                        </p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-title">预订须知</h3>
+                        <p class="info-content">
+                            - 请提前24小时预订<br>
+                            - 预订成功后不可取消<br>
+                            - 请在预订时间前15分钟到达<br>
+                            - 可携带最多1名儿童（12岁以下半价）<br>
+                            - 特殊饮食需求请提前告知
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 服务参数 -->
+                <div class="service-params">
+                    <div class="param-item">
+                        <span class="param-name">服务分类</span>
+                        <span class="param-value">美食</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-name">服务时长</span>
+                        <span class="param-value">2小时</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-name">服务时段</span>
+                        <span class="param-value">18:00-22:00</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-name">服务地点</span>
+                        <span class="param-value">市中心</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 订单信息 -->
+            <div class="order-info">
+                <!-- 价格信息 -->
+                <div class="price-info">
+                    <div class="price-label">服务价格</div>
+                    <div class="price-value">¥998</div>
+                    <div class="price-desc">/人</div>
+                </div>
+
+                <!-- 购买选项 -->
+                <div class="purchase-options">
+                    <div class="option-group">
+                        <label class="option-label" for="time-select">选择时间</label>
+                        <select class="option-select" id="time-select">
+                            <option value="18:00">18:00-20:00</option>
+                            <option value="19:00">19:00-21:00</option>
+                            <option value="20:00">20:00-22:00</option>
+                        </select>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="option-label" for="menu-select">选择套餐</label>
+                        <select class="option-select" id="menu-select">
+                            <option value="standard">标准套餐（¥998）</option>
+                            <option value="premium">豪华套餐（¥1598）</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 数量选择 -->
+                <div class="quantity-select">
+                    <button class="quantity-btn" id="decrease-btn">-</button>
+                    <span class="quantity-value" id="quantity-value">1</span>
+                    <button class="quantity-btn" id="increase-btn">+</button>
+                </div>
+
+                <!-- 购买按钮 -->
+                <button class="purchase-btn">立即购买</button>
+                <button class="cart-btn">加入购物车</button>
+            </div>
+        </div>
+
+        <!-- 商家信息 -->
+        <div class="merchant-info">
+            <h2 class="merchant-title">商家信息</h2>
+            <div class="merchant-content">
+                <div class="merchant-avatar">🍴</div>
+                <div class="merchant-details">
+                    <div class="merchant-name">星空餐厅</div>
+                    <div class="merchant-desc">米其林三星餐厅，以创意融合菜闻名</div>
+                    <div class="merchant-stats">
+                        <span>已服务1200+客户</span>
+                        <span>评分4.9</span>
+                        <span>成立于2018年</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 评论区 -->
+        <div class="comments-section">
+            <h2 class="comments-title">用户评价</h2>
+            <div class="comments-list">
+                <!-- 评论项 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-user">张三</span>
+                        <span class="comment-time">2023-12-15</span>
+                    </div>
+                    <div class="comment-rating">⭐⭐⭐⭐⭐</div>
+                    <div class="comment-content">
+                        非常棒的用餐体验，服务态度很好，菜品精致美味，环境优雅。强烈推荐！
+                    </div>
+                </div>
+
+                <!-- 评论项 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-user">李四</span>
+                        <span class="comment-time">2023-12-10</span>
+                    </div>
+                    <div class="comment-rating">⭐⭐⭐⭐</div>
+                    <div class="comment-content">
+                        菜品很好吃，尤其是牛排，火候刚好。唯一的不足是等待时间有点长。
+                    </div>
+                </div>
+
+                <!-- 评论项 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-user">王五</span>
+                        <span class="comment-time">2023-12-05</span>
+                    </div>
+                    <div class="comment-rating">⭐⭐⭐⭐⭐</div>
+                    <div class="comment-content">
+                        纪念日在这里度过，餐厅还特意准备了小惊喜，非常贴心！菜品和服务都无可挑剔。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数量选择功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const decreaseBtn = document.getElementById('decrease-btn');
+            const increaseBtn = document.getElementById('increase-btn');
+            const quantityValue = document.getElementById('quantity-value');
+            let quantity = 1;
+
+            decreaseBtn.addEventListener('click', function() {
+                if (quantity > 1) {
+                    quantity--;
+                    quantityValue.textContent = quantity;
+                }
+            });
+
+            increaseBtn.addEventListener('click', function() {
+                quantity++;
+                quantityValue.textContent = quantity;
+            });
+
+            // 购买按钮点击事件
+            const purchaseBtn = document.querySelector('.purchase-btn');
+            purchaseBtn.addEventListener('click', function() {
+                // 这里可以添加购买逻辑
+                console.log('立即购买按钮点击');
+            });
+
+            // 加入购物车按钮点击事件
+            const cartBtn = document.querySelector('.cart-btn');
+            cartBtn.addEventListener('click', function() {
+                // 这里可以添加加入购物车逻辑
+                console.log('加入购物车按钮点击');
+            });
+
+            // 导航按钮点击事件
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 这里可以添加导航逻辑
+                    console.log('导航按钮点击');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

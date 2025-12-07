@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活服务平台 - 确认订单</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 深色渐变背景 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        /* 导航标题 */
+        .nav-title {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 0, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 下单页容器 */
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* 订单详情 */
+        .order-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 部分标题 */
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff00ff;
+            border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        /* 地址选择 */
+        .address-section {
+            margin-bottom: 30px;
+        }
+
+        .address-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            background: rgba(255, 0, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .address-card.selected {
+            border-color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .address-name {
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        .address-phone {
+            color: #cccccc;
+        }
+
+        .address-detail {
+            color: #cccccc;
+            line-height: 1.5;
+        }
+
+        .add-address-btn {
+            width: 100%;
+            padding: 15px;
+            border: 2px dashed rgba(255, 0, 255, 0.3);
+            border-radius: 15px;
+            background: transparent;
+            color: #ff00ff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-address-btn:hover {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* 地图容器 */
+        .map-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, rgba(255, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+        }
+
+        /* 服务详情 */
+        .service-section {
+            margin-bottom: 30px;
+        }
+
+        .service-card {
+            display: flex;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+        }
+
+        .service-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-name {
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .service-time {
+            color: #999999;
+            margin-bottom: 10px;
+        }
+
+        .service-price {
+            color: #ff00ff;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        /* 订单备注 */
+        .notes-section {
+            margin-bottom: 30px;
+        }
+
+        .notes-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .notes-input::placeholder {
+            color: #666666;
+        }
+
+        /* 价格明细 */
+        .price-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .price-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 20px;
+            color: #ff00ff;
+        }
+
+        .price-label {
+            color: #999999;
+        }
+
+        .price-value {
+            color: #ffffff;
+        }
+
+        .price-item:last-child .price-value {
+            font-size: 24px;
+        }
+
+        /* 提交订单按钮 */
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000000;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 0, 255, 0.5);
+        }
+
+        /* 支付方式 */
+        .payment-section {
+            margin-bottom: 30px;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+        }
+
+        .payment-option.selected {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .payment-icon {
+            font-size: 32px;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .payment-desc {
+            color: #999999;
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .map-placeholder {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .order-details,
+            .price-summary {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .service-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .service-image {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .map-placeholder {
+                height: 200px;
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="nav-title">生活服务平台</div>
+        <div class="nav-buttons">
+            <button class="nav-btn">首页</button>
+            <button class="nav-btn">订单</button>
+            <button class="nav-btn">购物车</button>
+            <button class="nav-btn">我的</button>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 页面标题 -->
+        <h1 class="page-title">确认订单</h1>
+
+        <!-- 下单页容器 -->
+        <div class="checkout-container">
+            <!-- 订单详情 -->
+            <div class="order-details">
+                <!-- 地址选择 -->
+                <div class="address-section">
+                    <h2 class="section-title">配送地址</h2>
+                    <div class="address-card selected">
+                        <div class="address-header">
+                            <span class="address-name">张三</span>
+                            <span class="address-phone">138****8888</span>
+                        </div>
+                        <div class="address-detail">北京市朝阳区建国路88号 万达广场A座 1001室</div>
+                    </div>
+                    <div class="address-card">
+                        <div class="address-header">
+                            <span class="address-name">张三</span>
+                            <span class="address-phone">138****8888</span>
+                        </div>
+                        <div class="address-detail">北京市海淀区中关村大街1号 海龙大厦 505室</div>
+                    </div>
+                    <button class="add-address-btn">+ 添加新地址</button>
+                </div>
+
+                <!-- 地图容器 -->
+                <div class="map-container">
+                    <h3 style="margin-bottom: 15px; color: #ffffff;">配送位置</h3>
+                    <div class="map-placeholder">🗺️</div>
+                </div>
+
+                <!-- 服务详情 -->
+                <div class="service-section">
+                    <h2 class="section-title">服务详情</h2>
+                    <div class="service-card">
+                        <div class="service-image">🍽️</div>
+                        <div class="service-info">
+                            <div class="service-name">米其林星级餐厅晚餐</div>
+                            <div class="service-time">2024年1月3日 18:00</div>
+                            <div class="service-price">¥998 × 2人</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 订单备注 -->
+                <div class="notes-section">
+                    <h2 class="section-title">订单备注</h2>
+                    <textarea class="notes-input" placeholder="如有特殊要求，请在此说明..."></textarea>
+                </div>
+            </div>
+
+            <!-- 价格明细 -->
+            <div class="price-summary">
+                <h2 class="section-title">价格明细</h2>
+                <div class="price-item">
+                    <span class="price-label">商品总价</span>
+                    <span class="price-value">¥1,996</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">配送费</span>
+                    <span class="price-value">¥0</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">优惠券</span>
+                    <span class="price-value">-¥100</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">平台优惠</span>
+                    <span class="price-value">-¥50</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">总计</span>
+                    <span class="price-value">¥1,846</span>
+                </div>
+                <button class="submit-btn" onclick="goToPayment()">提交订单</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 地址选择
+        document.addEventListener('DOMContentLoaded', function() {
+            const addressCards = document.querySelectorAll('.address-card');
+            addressCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    addressCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        });
+
+        // 跳转到支付页
+        function goToPayment() {
+            window.location.href = 'payment-demo.html';
+        }
+    </script>
+</body>
+</html>
